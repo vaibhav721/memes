@@ -69,12 +69,46 @@ def random_meme(show='True'):
                            num_of_images)]['description'])
 
 
+	
+#checking argument
+def checkarg(format):
+    if format=='1':
+        print("Required parameters:- Image1,Text1,Text2")
+        if args.image1 is None:
+            print("Required parameters:- Image1,Text1,Text2")
+            print("Image is missing!")
+            return False
+        if args.text1 is None and args.text2 is None:
+            print("Required parameters:- Image1,Text1,Text2")
+            print("Top and Bottom text are missing!")
+            return False
+        else:
+            return True
+
+    elif format=='2' or format=='3':
+            print("Required parameters:- Image1,Image2,Text1,Text2")
+            if args.image1 is None:
+                print("Image 1 is Missing!!")
+            	return False
+	    if args.text1 is None:
+                print("Text 1 is Missing!!")
+		return False
+            if args.image2 is None:
+                print("Image 2 is Missing!!")
+		return False
+            if args.text2 is None:
+                print("Text 2 is Missing!!")
+            	return False
+	    return True
+
 # Main Function
 
 def start(args):
     formatObj = None
     if args.mode == '0':
-        if args.format == '0':
+        if checkarg(args.format) is False:
+		sys.exit()
+	if args.format == '0':
             if args.random == 'True' or args.random == 'False':
                 random_meme(args.random)
             else:
@@ -101,22 +135,14 @@ def start(args):
 									top_text=None,
 									bottom_text=args.text2)
                 use(formatObj)
-            else:
-                print('Missing arguments')
 
         if args.format == '2':
-            if args.image1 is not None and args.text1 is not None \
-                and args.image2 is not None and args.text2 is not None:
                 preprocessImages(args.image1)
                 preprocessImages(args.image2)
                 formatObj = Format2(args.image1, args.image2, args.text1, args.text2)
                 use(formatObj)
-            else:
-                print ('Missing arguments')
 
         if args.format == '3':
-            if args.image1 is not None and args.text1 is not None \
-                    and args.image2 is not None and args.text2 is not None:
                 text_top = args.text1.split(',')
                 text_bottom = args.text2.split(',')
                 if text_top.__len__() > 2 or text_bottom.__len__() > 2:
@@ -129,8 +155,6 @@ def start(args):
 										top_text=text_top,
 										bottom_text=text_bottom)
                     use(formatObj)
-            else:
-                print("Missing arguements")
 
     if args.mode == '1':
         logo.print_logo()
