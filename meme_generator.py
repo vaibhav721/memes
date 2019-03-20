@@ -69,37 +69,40 @@ def random_meme(show='True'):
                            num_of_images)]['description'])
 
 
-	
+
 #checking argument
-def checkarg(format):
+def checkarg(format,image1,text1,text2):#for mode=0 and format=1
     if format=='1':
-        print("Required parameters:- Image1,Text1,Text2")
-        if args.image1 is None:
+        if image1 is None:
             print("Required parameters:- Image1,Text1,Text2")
             print("Image is missing!")
             return False
-        if args.text1 is None and args.text2 is None:
+        if text1 is None and text2 is None:
             print("Required parameters:- Image1,Text1,Text2")
             print("Top and Bottom text are missing!")
             return False
         else:
             return True
 
-    elif format=='2' or format=='3':
-            print("Required parameters:- Image1,Image2,Text1,Text2")
-            if args.image1 is None:
-                print("Image 1 is Missing!!")
-            	return False
-	    if args.text1 is None:
-                print("Text 1 is Missing!!")
-		return False
-            if args.image2 is None:
-                print("Image 2 is Missing!!")
-		return False
-            if args.text2 is None:
-                print("Text 2 is Missing!!")
-            	return False
-	    return True
+def checkarg(format,image1,image2,text1,text2):#for mode=0 and format=2&3
+    flag=1
+    if format=='2' or format=='3':
+        if image1 is None:
+            print("Image 1 is missing!")
+            flag=0
+        if image2 is None:
+            print("Image 2 is missing!")
+            flag=0
+        if text1 is None :
+            print("Top text is missing!")
+            flag=0
+        if text2 is None :
+            print("Bottom text is missing!")
+            flag=0
+        if flag==0:
+            return False
+        else:
+            return True
 
 # Main Function
 
@@ -115,6 +118,8 @@ def start(args):
                 print ('Empty or invalid arguments')
 
         if args.format == '1':
+	    if checkarg(args.format,args.image1,args.text1,args.text2) is False:
+                sys.exit()
             if args.text1 and args.text2 and args.image1:
                 preprocessImages(args.image1)
                 formatObj = Format1(image_path=args.image1,
@@ -137,12 +142,16 @@ def start(args):
                 use(formatObj)
 
         if args.format == '2':
+		if checkarg(args.format,args.image1,args.image2,args.text1,args.text2) is False:
+                sys.exit()
                 preprocessImages(args.image1)
                 preprocessImages(args.image2)
                 formatObj = Format2(args.image1, args.image2, args.text1, args.text2)
                 use(formatObj)
 
         if args.format == '3':
+		if checkarg(args.format,args.image1,args.image2,args.text1,args.text2) is False:
+                sys.exit()
                 text_top = args.text1.split(',')
                 text_bottom = args.text2.split(',')
                 if text_top.__len__() > 2 or text_bottom.__len__() > 2:
